@@ -1,0 +1,2 @@
+Ticket.java contains the functions for generating the tickets, and the associated data variables such as numStatus, limits, type of the ticket.
+
