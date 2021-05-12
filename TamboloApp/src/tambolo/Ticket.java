@@ -104,20 +104,8 @@ public class Ticket{
 				ticketContents[j][i] = temp;
 			}
 		}
-		
-		//testing purposes
-//		for(int i = 0; i<rows; i++) {
-//			for( int j = 0; j<cols; j++) {
-//				System.out.print(ticketContents[i][j] + "      ");
-//			}
-//			System.out.println();
-//		} 
-		
+			
 		return ticketContents;
 	}
-	
-//	public static void main(String[] args) {
-//		Ticket ob = new Ticket();
-//		ob.generator();
-//	}
+
 }
