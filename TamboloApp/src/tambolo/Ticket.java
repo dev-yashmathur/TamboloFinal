@@ -22,7 +22,7 @@ public class Ticket{
 	HashMap<Integer, List<Integer>> universalSet = new HashMap<>();
 	
 	void initSet() { //initializing the domain of numbers for the ticket
-		int num = lowerLimit;
+		int num = lowerLimit-1;
 		for(int i = 0; i<cols; i++) { //since column numbers for reference should start from 1
 			universalSet.put(i, new ArrayList<>(rangeOfCol));
 			for(int j = 0; j<rangeOfCol; j++) {
@@ -30,6 +30,11 @@ public class Ticket{
 				universalSet.put(i, universalSet.get(i));
 			}
 		}
+		//removing the num below the lowest and adding the highest
+		universalSet.get(0).remove(0);
+		universalSet.get(cols-1).add(upperLimit);
+//		for(int i = 0; i<cols; i++) 
+//			System.out.println(universalSet.get(i));
 	}
 	
 	//shuffling the true set to determine positions
