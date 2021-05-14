@@ -1,11 +1,9 @@
 package tambolo;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
@@ -27,7 +25,7 @@ class TickTable extends JTable {
 		this.setRowHeight(dim);
 		
 		//this.setDefaultEditor(Integer.class, null);
-		this.setDefaultRenderer(Integer.class, new NumStatusRender(numStatus_table));
+		this.setDefaultRenderer(Integer.class, new NumStatusRender(this));
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		
 	}
@@ -60,25 +58,54 @@ public class ticketRender extends JPanel{
 		tableLayer.setBorder(ticket_name);
 		tableLayer.setBackground(new Color(204, 221, 238));
 		this.add(tableLayer);
-		
+		this.setBackground(new Color(196, 250, 248));
 	}
 	
-	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		frame.setLayout(new FlowLayout());
-		ticketRender test = new ticketRender("name");
-		//frame.setLayout(new FlowLayout());
-		frame.add(test);
-		frame.pack();
-		frame.setVisible(true);
-		for(int i = 0; i<Ticket.rows; i++) {
-			for(int j = 0; j<Ticket.cols; j++) {
-				System.out.print(test.table.numStatus_table[i][j] + " ");
+	rc_container checkForNum(int num) {
+		rc_container container = new rc_container();
+		if(num < 10 && num > 0) {
+			for(int i = 0; i< Ticket.rows; i++) { 
+				try {
+					int table_val = (int) table.getValueAt(i, 0);
+					if(table_val == num) {
+						table.numStatus_table[i][0] = false; //cut
+						container.present = true; //denoting change
+						container.row = i;
+						container.col = 0;
+						return container;
+					}
+				}catch(NullPointerException e) {
+					
+				}
 			}
-			System.out.println();
 		}
+		else {
+			int col = (int)num/Ticket.rangeOfCol; 
+			if(num == Ticket.upperLimit) {
+				col--;
+			}
+			//System.out.println(col);
+			for(int i = 0; i<Ticket.rows; i++) {
+				try {
+					int table_val = (int) table.getValueAt(i, col);
+					//System.out.println(table_val);
+					if(table_val == num) {
+						table.numStatus_table[i][col] = false; //cut
+						container.present = true; //denoting change
+						container.row = i;
+						container.col = col;
+						return container;
+					}
+				}catch (NullPointerException e) {
+					
+				}
+			}
+			
+		}
+		container.present = false;//if no changes were reported then return false
+		return container;
 	}
 	
+
 	
 }
