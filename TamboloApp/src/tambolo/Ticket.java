@@ -15,7 +15,7 @@ public class Ticket{
 	static int lowerLimit = 1;
 	static int upperLimit = 90;
 	static int rangeOfCol = 10;
-	static String[] names = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+	static String[] names = new String[cols];
 	
 	Integer ticketContents[][];//the numbers in the ticket along with position
 	Boolean numStatus[][]; //true=num, false = cut, null=empty
@@ -55,6 +55,9 @@ public class Ticket{
 	
 	Integer[][] generator() {
 		initSet(); //so that any ticket will remove elements from its own local universal set
+		for(int i = 0; i<cols; i++) {
+			names[i] = Integer.toString(i+1);
+		}
 		
 		ticketContents = new Integer[rows][cols];
 		for(int i = 0; i<rows; i++) {
