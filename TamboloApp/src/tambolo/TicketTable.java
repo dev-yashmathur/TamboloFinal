@@ -20,11 +20,11 @@ public class TicketTable extends AbstractTableModel {
 	
 	@Override 
 	public int getRowCount() {
-		return Ticket.rows;
+		return StaticItems.rows;
 	}
 	@Override 
 	public int getColumnCount() {
-		return Ticket.cols;
+		return StaticItems.cols;
 	}
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
@@ -37,14 +37,14 @@ public class TicketTable extends AbstractTableModel {
 	}
 	
 
-	public static void main(String[] args) {
-		Ticket ob = new Ticket();
-		JFrame frame = new JFrame();
-		frame.setLayout(new FlowLayout());
-		JTable myTable = new JTable(new TicketTable(ob.generator()));
-		frame.add(myTable);
-		
-		frame.pack();
-		frame.setVisible(true);
-	}
+//	public static void main(String[] args) {
+//		Ticket ob = new Ticket();
+//		JFrame frame = new JFrame();
+//		frame.setLayout(new FlowLayout());
+//		JTable myTable = new JTable(new TicketTable(ob.generator()));
+//		frame.add(myTable);
+//		
+//		frame.pack();
+//		frame.setVisible(true);
+//	}
 }

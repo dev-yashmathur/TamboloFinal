@@ -7,7 +7,7 @@ public class Prize_Check {
 		ticketRender current = ob;
 		Boolean[][] numStatus_local = current.table.numStatus_table;
 		boolean status = true;
-		for(int col = 0; col<Ticket.cols; col++) {
+		for(int col = 0; col<StaticItems.cols; col++) {
 			if(numStatus_local[line_no][col] == null || numStatus_local[line_no][col] == false ) {
 				continue;
 			}

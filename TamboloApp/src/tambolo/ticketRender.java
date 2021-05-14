@@ -46,7 +46,7 @@ public class ticketRender extends JPanel{
 	ticketRender (String name) {
 		super();
 		Ticket ob = new Ticket();
-		table = new TickTable(ob.generator(), Ticket.names, ob.numStatus, 50);
+		table = new TickTable(ob.generator(), StaticItems.col_names, ob.numStatus, 50);
 		//table.numStatus_table = ob.numStatus; //added to constructor
 		JPanel tableLayer = new JPanel(); //layer to store the table, so as to give it a header
 		
@@ -64,7 +64,7 @@ public class ticketRender extends JPanel{
 	rc_container checkForNum(int num) {
 		rc_container container = new rc_container();
 		if(num < 10 && num > 0) {
-			for(int i = 0; i< Ticket.rows; i++) { 
+			for(int i = 0; i< StaticItems.rows; i++) { 
 				try {
 					int table_val = (int) table.getValueAt(i, 0);
 					if(table_val == num) {
@@ -80,12 +80,12 @@ public class ticketRender extends JPanel{
 			}
 		}
 		else {
-			int col = (int)num/Ticket.rangeOfCol; 
-			if(num == Ticket.upperLimit) {
+			int col = (int)num/StaticItems.rangeOfCol; 
+			if(num == StaticItems.upperLimit) {
 				col--;
 			}
 			//System.out.println(col);
-			for(int i = 0; i<Ticket.rows; i++) {
+			for(int i = 0; i<StaticItems.rows; i++) {
 				try {
 					int table_val = (int) table.getValueAt(i, col);
 					//System.out.println(table_val);

@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Collections;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -22,6 +25,8 @@ public class UI {
 	Border Padding = BorderFactory.createEmptyBorder(35, 35, 35, 35);
 	
 	int Tickets_num;
+	ticketRender[] ticket_list; 
+	JPanel ticket_panel;
 	
 	void welcome_frame_init() {
 		JFrame welcome_frame = new JFrame();
@@ -63,7 +68,23 @@ public class UI {
 			public void keyTyped(KeyEvent e) { }
 			@Override
 			public void keyPressed(KeyEvent e) { }
+		});
+		
+		welcome_frame.addMouseListener(new MouseListener() {
 			
+			@Override
+			public void mouseReleased(MouseEvent e) { }
+			@Override
+			public void mousePressed(MouseEvent e) { }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				welcome_frame.dispose();
+				player_details_frame_init();			
+			}
+			@Override
+			public void mouseExited(MouseEvent e) { }
+			@Override
+			public void mouseEntered(MouseEvent e) { }	
 		});
 	}
 	
@@ -130,7 +151,7 @@ public class UI {
 	
 		
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = 10000; //ensuring always last
 		gbc.gridwidth = 2;
 		input_panel.add(goToPrizes, gbc);		
 		goToPrizes.addActionListener(new ActionListener() {
@@ -318,6 +339,18 @@ public class UI {
 				play_frame_init();
 			}
 		});
+		goToPlay.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) { }
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyChar() == 10) {
+					goToPlay.doClick();
+				}
+			}
+			@Override
+			public void keyPressed(KeyEvent e) { }
+		});
 		
 		
 		prize_frame.add(prize_panel);
@@ -326,16 +359,16 @@ public class UI {
 		prize_frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 	
-	void play_frame_init() {
-		JFrame play_frame = new JFrame();
+	void ticket_frame_init() {
 		JFrame ticket_frame = new JFrame();
-		JPanel play_panel = new JPanel();
-		JPanel ticket_panel = new JPanel();
+		ticket_panel = new JPanel();
 		ticket_panel.setLayout(new GridBagLayout());
+		ticket_panel.setBackground(bg);
+		ticket_panel.setBorder(Padding);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;
 		
-		ticketRender[] ticket_list = new ticketRender[Tickets_num];
+		ticket_list = new ticketRender[Tickets_num];
 		for(int i = 0; i<Tickets_num; i++) {
 			gbc.gridy++;
 			ticket_list[i] = new ticketRender("demo");
@@ -345,7 +378,49 @@ public class UI {
 		ticket_frame.add(jsp);
 		ticket_frame.pack();
 		ticket_frame.setVisible(true);
-		ticket_frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		ticket_frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+	}
+	
+	void play_frame_init() {
+		ticket_frame_init();
+		JFrame play_frame = new JFrame();	
+		JPanel play_panel = new JPanel();
+		for(int i = StaticItems.lowerLimit; i<=StaticItems.upperLimit; i++)
+			StaticItems.left.add(i);
+		Collections.shuffle(StaticItems.left);
+		
+		JButton next_num = new JButton("Next number");
+		JLabel num_display = new JLabel("");
+		
+		next_num.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int current_num = StaticItems.left.get(0);
+					StaticItems.left.remove(0);
+					num_display.setText(Integer.toString(current_num));
+					for(int ticket_count = 0; ticket_count <Tickets_num; ticket_count++) {
+						rc_container ob = new rc_container();
+						ob = ticket_list[ticket_count].checkForNum(current_num);
+						if(ob.present) {
+							ticket_list[ticket_count].repaint();
+							if(Prize_Check.LINE(ticket_list[ticket_count], ob.row))
+								System.out.println("LINE " + (ob.row+1) + " DONE");
+						}
+					}
+				}catch(IndexOutOfBoundsException IOB) {
+					num_display.setText("The End");
+				}
+			}
+		});
+		play_panel.setLayout(new FlowLayout());
+		play_panel.add(next_num);
+		play_panel.add(num_display);
+		
+		play_frame.add(play_panel);
+		play_frame.pack();
+		play_frame.setVisible(true);
+		play_frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 	
 	
