@@ -10,6 +10,7 @@ public class StaticItems {
 	static int lowerLimit = 1;
 	static int upperLimit = 90;
 	static int rangeOfCol = 10;
+	static String[] player_names;
 	static String[] col_names = new String[cols];
 	static ArrayList<Integer> left = new ArrayList<Integer>(StaticItems.upperLimit-StaticItems.lowerLimit+1);
 	static List<Integer> done = new ArrayList<>();

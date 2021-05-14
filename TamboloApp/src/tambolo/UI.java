@@ -8,10 +8,13 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.*;
@@ -89,6 +92,7 @@ public class UI {
 	}
 	
 	void player_details_frame_init() {
+		
 		JFrame player_details_frame = new JFrame();
 		JPanel input_panel = new JPanel();
 		input_panel.setBackground(bg);
@@ -117,7 +121,9 @@ public class UI {
 		gbc.gridy = 0;
 		input_panel.add(inputNoOfTickets, gbc);
 		
+		JButton enterNames = new JButton("Enter Names");
 		JButton goToPrizes = new JButton("Select Prizes");
+		
 		//gridy = 1 is used for caution
 		inputNoOfTickets.addKeyListener(new KeyListener() {
 			@Override
@@ -128,7 +134,7 @@ public class UI {
 			public void keyReleased(KeyEvent e) {
 				char current_letter = e.getKeyChar();
 				if(current_letter == 10) {
-					goToPrizes.doClick();
+					enterNames.doClick();
 					return;
 				}
 				
@@ -148,13 +154,16 @@ public class UI {
 			}
 			
 		});
-	
-		
 		gbc.gridx = 0;
-		gbc.gridy = 10000; //ensuring always last
 		gbc.gridwidth = 2;
-		input_panel.add(goToPrizes, gbc);		
-		goToPrizes.addActionListener(new ActionListener() {
+		gbc.gridy = 2;
+		
+		input_panel.add(enterNames, gbc);
+		ArrayList<JPanel> name_panel = new ArrayList<>();
+		ArrayList<JLabel> name_label = new ArrayList<>();
+		ArrayList<JTextField> name_field = new ArrayList<>();
+		
+		enterNames.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -168,6 +177,57 @@ public class UI {
 					player_details_frame.pack();
 					return;
 				}
+				for(int j = name_panel.size()-1; j>=0; j--) {
+					input_panel.remove(name_panel.get(j));
+					name_panel.remove(j);
+					name_label.remove(j);
+					name_field.remove(j);
+					player_details_frame.revalidate();
+				}
+				for(int i = 0; i<Tickets_num; i++) {
+					name_panel.add(new JPanel());
+					name_panel.get(i).setBackground(bg);
+					name_label.add(new JLabel("Enter Name " + Integer.toString(i+1) + ": "));
+					name_field.add(new JTextField(50));
+					name_label.get(i).setFont(Smaller);
+					name_field.get(i).setFont(Smaller);
+					name_panel.get(i).add(name_label.get(i));
+					name_panel.get(i).add(name_field.get(i));
+					gbc.gridy = 2+1+i;//2 for previous, 1 cause i starts from 0
+					gbc.gridx = 0;
+					gbc.gridwidth =2;
+					input_panel.add(name_panel.get(i), gbc);
+					player_details_frame.pack();
+					player_details_frame.revalidate();	
+				}
+			}
+		});
+		
+		gbc.gridx = 0;
+		gbc.gridy = 10000; //ensuring always last
+		gbc.gridwidth = 2;
+		input_panel.add(goToPrizes, gbc);		
+		goToPrizes.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(Tickets_num != Integer.parseInt(inputNoOfTickets.getText())) {
+						enterNames.doClick();
+						return;
+					} 
+				}catch(Exception excep) {
+					enterNames.doClick();
+					return;
+				}
+				StaticItems.player_names = new String[Tickets_num];
+				for(int i = 0; i<Tickets_num; i++) {
+					try {
+						StaticItems.player_names[i] = name_field.get(i).getText() + " :: " + Integer.toString(i+1);
+					}catch(NullPointerException excep) {
+						StaticItems.player_names[i] = Integer.toString(i+1);
+					}
+				}
+				
 				player_details_frame.dispose();
 				prize_frame_init();
 			}
@@ -371,7 +431,7 @@ public class UI {
 		ticket_list = new ticketRender[Tickets_num];
 		for(int i = 0; i<Tickets_num; i++) {
 			gbc.gridy++;
-			ticket_list[i] = new ticketRender("demo");
+			ticket_list[i] = new ticketRender(StaticItems.player_names[i]);
 			ticket_panel.add(ticket_list[i], gbc);
 		}
 		JScrollPane jsp = new JScrollPane(ticket_panel);
