@@ -42,11 +42,20 @@ class TickTable extends JTable {
 
 @SuppressWarnings("serial")
 public class ticketRender extends JPanel{
+	String nameOfHolder;
+	int countOfDone = 0;
+	rc_container[][] onlyNumsInOrder;
 	TickTable table;
 	ticketRender (String name) {
 		super();
 		Ticket ob = new Ticket();
+		try {
+		nameOfHolder = name;
+		}catch(NullPointerException except) {
+			nameOfHolder = "Name Not Availible";
+		}
 		table = new TickTable(ob.generator(), StaticItems.col_names, ob.numStatus, 50);
+		onlyNumsInOrder = numbersInRowFinder(this);
 		//table.numStatus_table = ob.numStatus; //added to constructor
 		JPanel tableLayer = new JPanel(); //layer to store the table, so as to give it a header
 		
@@ -68,6 +77,8 @@ public class ticketRender extends JPanel{
 				try {
 					int table_val = (int) table.getValueAt(i, 0);
 					if(table_val == num) {
+						this.countOfDone++;
+						onlyNumsInOrder[i][0].present = false;
 						table.numStatus_table[i][0] = false; //cut
 						container.present = true; //denoting change
 						container.row = i;
@@ -90,14 +101,22 @@ public class ticketRender extends JPanel{
 					int table_val = (int) table.getValueAt(i, col);
 					//System.out.println(table_val);
 					if(table_val == num) {
+						this.countOfDone++;
 						table.numStatus_table[i][col] = false; //cut
+						for(int column = 0; column<StaticItems.numPerRow; column++) {
+							if(onlyNumsInOrder[i][column].col == col) {
+								onlyNumsInOrder[i][column].present = false; //because column "1" represents column number 2 
+								break;
+							}
+						}
+						
 						container.present = true; //denoting change
 						container.row = i;
 						container.col = col;
 						return container;
 					}
 				}catch (NullPointerException e) {
-					
+					//System.out.println("NPE");
 				}
 			}
 			
@@ -106,6 +125,30 @@ public class ticketRender extends JPanel{
 		return container;
 	}
 	
+	rc_container[][] numbersInRowFinder(ticketRender ob) {
+		rc_container[][] numInRow = new rc_container[StaticItems.rows][StaticItems.numPerRow];
+		for(int i = 0; i<StaticItems.rows; i++) {
+			int col = 0;
+			for(int j = 0; j<StaticItems.cols; j++) {
+				try {
+					Boolean a = ob.table.numStatus_table[i][j];
+					if(a == null)
+						continue;
+					else {
+						rc_container current = new rc_container();
+						current.row = i;
+						current.col = j;
+						current.present = a;
+						numInRow[i][col] = current;
+						col++;
+					}
+				}catch(NullPointerException e) {
+					
+				}
+			}
+		}
+		return numInRow;
+	}
 
 	
 }
