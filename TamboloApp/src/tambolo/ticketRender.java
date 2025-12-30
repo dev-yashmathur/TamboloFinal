@@ -67,7 +67,7 @@ public class ticketRender extends JPanel{
 		tableLayer.setBorder(ticket_name);
 		tableLayer.setBackground(new Color(204, 221, 238));
 		this.add(tableLayer);
-		this.setBackground(new Color(196, 250, 248));
+		this.setBackground(new Color(110, 202, 255));
 	}
 	
 	rc_container checkForNum(int num) {

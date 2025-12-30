@@ -23,7 +23,7 @@ public class UI {
 	Font UIFont = new Font(Font.MONOSPACED, Font.BOLD, 48);
 	Font Smaller = new Font(Font.MONOSPACED, Font.ITALIC, 32);
 	Font caution = new Font(Font.SANS_SERIF, Font.BOLD, 24);
-	Color bg = new Color(196, 250, 248);
+	Color bg = new Color(110, 202, 255);
 	Border Padding = BorderFactory.createEmptyBorder(35, 35, 35, 35);
 	
 	int Tickets_num;
